@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
+  <display-name>lambda_new</display-name>
+  <servlet>
+    <servlet-name>DispatcherServlet</servlet-name>
+    <servlet-class>
+        org.springframework.web.servlet.DispatcherServlet
+    </servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring-mvc.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <filter>    
+      <filter-name>encodingFilter</filter-name>    
+      <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>    
+      <init-param>    
+          <param-name>encoding</param-name>    
+          <param-value>UTF-8</param-value> <!--设置你想用的字符集，我这里用的是GB18030-->    
+      </init-param>    
+      <init-param>  
+        <param-name>forceEncoding</param-name>  
+        <param-value>true</param-value>  
+      </init-param>  
+  </filter>
+  
+  <servlet-mapping>
+    <servlet-name>DispatcherServlet</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>InitConfigServlet</servlet-name>
+    <servlet-class>com.pccw.common.InitConfigServlet</servlet-class>
+    <load-on-startup>2</load-on-startup>
+ </servlet>
+  
+</web-app>

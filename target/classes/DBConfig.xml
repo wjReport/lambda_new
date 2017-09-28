@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DBConnection>
+   <DB>
+      <name>system</name>
+      <driver>oracle.jdbc.OracleDriver</driver>
+      <dbtype>Oracle</dbtype>
+      <url>jdbc:oracle:thin:@10.87.9.161:11401:HESIT</url>
+      <username>apps</username>
+      <password>FpzGCwACXWs=</password> 
+      <maxPoolSize>50</maxPoolSize>
+      <minPoolSize>3</minPoolSize>
+   </DB>
+   <DB>
+      <name>form</name>
+      <dbtype>Mysql</dbtype>
+      <driver>com.mysql.cj.jdbc.Driver</driver>
+       <url>jdbc:mysql://127.0.0.1:3306/form</url>
+      <username>root</username>
+      <password></password>
+      <maxPoolSize>50</maxPoolSize>
+      <minPoolSize>3</minPoolSize>
+   </DB>
+</DBConnection>

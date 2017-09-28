@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 模块名 -->
+<mapper namespace="lambda">
+	
+	<sql id="condition">
+		<if test="id != null">
+			and id = #{id}
+		</if>
+		<if test="name != null and name != '' ">
+			and name = #{name}
+		</if>
+		<if test="lambda_expression != null and lambda_expression != ''">
+			and lambda_expression = #{lambda_expression}
+		</if>
+		<if test="code_bytes != null and code_bytes != '' ">
+			and code_bytes = #{code_bytes}
+		</if>
+		<if test="select_id != null ">
+			and select_id = #{select_id}
+		</if>
+		<if test="is_active != null and is_active != '' ">
+			and is_active = #{is_active}
+		</if>
+	</sql>
+	
+	<!-- 查询，resultType是结果类型，返回的list元素的转成该对象类型 -->
+	<select id="select" resultType="map" parameterType="map">
+		select * from lambda_expression where 1=1 
+		<include refid="condition"></include>
+	</select>
+	
+	<!-- 新增，parameterType参数类型，可以是java基本对象，可以是对象，#{}表示取对应的参数 -->
+	<insert id="insert" parameterType="map">
+		insert into lambda_expression(name, lambda_expression, code_bytes,create_date,create_by, is_active,select_id) 
+		values(#{name,jdbcType=VARCHAR}, #{lambda_expression,jdbcType=VARCHAR}, #{code_bytes, jdbcType=BINARY},
+		#{create_date, jdbcType=TIMESTAMP},#{create_by,jdbcType=VARCHAR},#{is_active,jdbcType=INTEGER},#{select_id,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="map">
+		update lambda_expression  
+		<set>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="lambda_expression != null and lambda_expression != ''">
+				lambda_expression = #{lambda_expression},
+			</if>
+			<if test="code_bytes != null and code_bytes != '' ">
+				code_bytes = #{code_bytes},
+			</if>
+			<if test="is_active != null and is_active != '' ">
+				is_active = #{is_active}
+			</if>
+			<if test="select_id != null and select_id != '' ">
+				select_id = #{select_id}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+</mapper>

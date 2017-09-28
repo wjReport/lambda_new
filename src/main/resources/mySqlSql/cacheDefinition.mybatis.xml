@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 模块名 -->
+<mapper namespace="cacheDefinition">
+	<!-- 查询，resultType是结果类型，返回的list元素的转成该对象类型 -->
+	<select id="select" resultType="map" parameterType="map">
+		select * from lambda_cache_definition  where 1=1
+		<if test="select_id != null and select_id != '' ">
+			and select_id = #{select_id}
+		</if>
+		<if test="is_active != null ">
+			and is_active = #{is_active}
+		</if>
+	</select>
+	
+	<!-- 新增，parameterType参数类型，可以是java基本对象，可以是对象，#{}表示取对应的参数 -->
+	<insert id="insert" parameterType="map">
+		insert into lambda_cache_definition(cache_name, select_id,parameter,load_time,load_strategy,
+		is_active,create_date, create_by,db_user) values(#{cache_name,jdbcType=VARCHAR},
+		#{select_id,jdbcType=VARCHAR},#{parameter,jdbcType=VARCHAR},#{load_time,jdbcType=TIMESTAMP},
+		#{load_strategy,jdbcType=INTEGER},#{is_active,jdbcType=INTEGER},#{create_date,jdbcType=TIMESTAMP},
+		#{create_by,jdbcType=VARCHAR},#{db_user,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="map">
+		update lambda_cache_definition c
+		<set> 
+			<if test="is_active != null">c.is_active=#{is_active,jdbcType=INTEGER}, </if>
+			<if test="cache_name != null and cache_name != '' ">c.cache_name = #{cache_name,jdbcType=VARCHAR},</if>
+			<if test="select_id != null and select_id != '' ">c.select_id = #{select_id,jdbcType=VARCHAR},</if>
+			<if test="parameter != null and parameter != '' ">c.parameter = #{parameter,jdbcType=VARCHAR},</if>
+			<if test="load_time != null">c.load_time = #{load_time,jdbcType=TIMESTAMP},</if>
+			<if test="load_strategy !=null">c.load_strategy = #{load_strategy,jdbcType=INTEGER},</if>
+			<if test="create_date != null">c.create_date = #{create_date,jdbcType=TIMESTAMP},</if>
+			<if test="create_by != null and create_by != '' ">c.create_by = #{create_by,jdbcType=VARCHAR},</if>
+			<if test="db_user != null and db_user !='' ">c.db_user = #{db_user,jdbcType=VARCHAR},</if>
+		</set>
+		<where>
+			<choose>
+				<when test="id !=null "> and c.id=#{id}</when>
+				<when test="select_id !=null ">c.select_id=#{select_id}</when>
+				<otherwise></otherwise>
+			</choose>
+		</where> 
+	</update>
+	
+</mapper>

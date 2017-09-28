@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 模块名 -->
+<mapper namespace="gl">
+
+	<select id="getBal"  parameterType="Map" resultType="Map">
+	  <![CDATA[
+	  select gcc.segment3,
+       gb.period_year,
+       gb.period_num,
+       gcc.segment1,
+       gcc.segment2,
+       gcc.segment4,
+       gcc.segment5,
+       gcc.segment6,
+       gcc.segment7,
+       gb.period_net_dr,
+       gb.period_net_cr,
+       round(gb.begin_balance_dr, 2) begin_balance_dr,
+       round(gb.begin_balance_cr, 2) begin_balance_cr
+	  from gl_balances gb, gl_code_combinations gcc
+	 where gb.code_combination_id = gcc.code_combination_id
+	 and gb.period_name=#{period_name}   and gcc.summary_flag = 'N'
+	and (gb.period_net_dr <> 0 or gb.period_net_cr <> 0 or
+	gb.begin_balance_dr <>0 or gb.begin_balance_cr <> 0)  
+    and gb.set_of_books_id =#{set_of_books_id}
+	 ]]>
+	</select>
+	<!-- 查询，resultType是结果类型，返回的list元素的转成该对象类型 -->
+	<select id="getSetofbooks" resultType="Map">
+	  <![CDATA[
+	  select sob.set_of_books_id code, 
+	         to_char(sob.set_of_books_id) || ' ' || sob.description description 
+	  from apps.gl_sets_of_books sob
+	  
+	 ]]>
+	</select>
+
+
+	<!-- 查询会计期间 -->
+	<select id="getPeriod"  resultType="Map">
+	  <![CDATA[
+		  SELECT '总账' type,
+	       gps.period_year,
+	       gps.period_num,
+	       gps.period_type,
+	       gps.period_name period_name,
+	       decode(gps.closing_status,
+	              'C',
+	              '关闭',
+	              'N',
+	              '从未打开',
+	              'F',
+	              '将来打开',
+	              '打开') closing_status
+		  FROM gl_period_statuses gps
+		 WHERE gps.application_id = 101
+	 ]]>
+	</select>
+
+
+	<!-- 查询，resultType是结果类型，返回的list元素的转成该对象类型 -->
+	<select id="getSegment1" resultType="Map" >
+	  <!--{id:"getSegment3",
+	     name:"查询Segment3",
+	     desc:"根据用户ID查主询用户信息",
+	     params:[
+	     {name:"user_id",datatype:"varchar",type:"in"},
+	     {name:"user_name",datatype:"varchar",type:"out"},
+	     {name:"createby",datatype:"varchar",type:"out"},
+	     {name:"createtime",datatype:"varchar",type:"out"}
+	     
+	     ]
+	     }-->
+	  
+	  <![CDATA[
+	  select ffv.flex_value code, to_char(ffv.flex_value) || ' ' || ffvt.description description
+              from apps.fnd_flex_values     ffv,
+                   apps.fnd_flex_values_tl  ffvt,
+                   apps.fnd_flex_value_sets ffvs
+             where ffv.flex_value_id = ffvt.flex_value_id
+               and ffvt.language = 'ZHS'
+               and ffvs.flex_value_set_id = ffv.flex_value_set_id
+               and ffvs.flex_value_set_name like '%MC_COA_CO'
+             order by ffv.flex_value
+	  
+	 ]]>
+	</select>
+	<!-- 名称：查询segment2，描述：根据账套查询，创建时间：2016-1-1-->
+	<select id="getSegment2" resultType="Map">
+	  <![CDATA[
+	  select ffv.flex_value code, to_char(ffv.flex_value) || ' ' || ffvt.description description
+              from apps.fnd_flex_values     ffv,
+                   apps.fnd_flex_values_tl  ffvt,
+                   apps.fnd_flex_value_sets ffvs
+             where ffv.flex_value_id = ffvt.flex_value_id
+               and ffvt.language = 'ZHS'
+               and ffvs.flex_value_set_id = ffv.flex_value_set_id
+               and ffvs.flex_value_set_name like '%MC_COA_CC'
+             order by ffv.flex_value
+	  
+	 ]]>
+	</select>
+	<!-- 查询，resultType是结果类型，返回的list元素的转成该对象类型 -->
+	<select id="getSegment3" resultType="Map">
+	  <![CDATA[
+	  select ffv.flex_value code, to_char(ffv.flex_value) || ' ' || ffvt.description description
+              from apps.fnd_flex_values     ffv,
+                   apps.fnd_flex_values_tl  ffvt,
+                   apps.fnd_flex_value_sets ffvs
+             where ffv.flex_value_id = ffvt.flex_value_id
+               and ffvt.language = 'ZHS'
+               and ffvs.flex_value_set_id = ffv.flex_value_set_id
+               and ffvs.flex_value_set_name like '%MC_COA_AC'
+             order by ffv.flex_value
+	  
+	 ]]>
+	</select>
+	<!-- 查询，resultType是结果类型，返回的list元素的转成该对象类型 -->
+	<select id="getSegment4" resultType="Map">
+	  <![CDATA[
+	  select ffv.flex_value code, to_char(ffv.flex_value) || ' ' || ffvt.description description
+              from apps.fnd_flex_values     ffv,
+                   apps.fnd_flex_values_tl  ffvt,
+                   apps.fnd_flex_value_sets ffvs
+             where ffv.flex_value_id = ffvt.flex_value_id
+               and ffvt.language = 'ZHS'
+               and ffvs.flex_value_set_id = ffv.flex_value_set_id
+               and ffvs.flex_value_set_name like '%MC_COA_SB'
+             order by ffv.flex_value
+	  
+	 ]]>
+	</select>
+	<!-- 查询，resultType是结果类型，返回的list元素的转成该对象类型 -->
+	<select id="getSegment5" resultType="Map">
+	  <![CDATA[
+	  select ffv.flex_value code, to_char(ffv.flex_value) || ' ' || ffvt.description description
+              from apps.fnd_flex_values     ffv,
+                   apps.fnd_flex_values_tl  ffvt,
+                   apps.fnd_flex_value_sets ffvs
+             where ffv.flex_value_id = ffvt.flex_value_id
+               and ffvt.language = 'ZHS'
+               and ffvs.flex_value_set_id = ffv.flex_value_set_id
+               and ffvs.flex_value_set_name like '%MC_COA_PJ'
+             order by ffv.flex_value
+	  
+	 ]]>
+	</select>
+	<!-- 查询，resultType是结果类型，返回的list元素的转成该对象类型 -->
+	<select id="getSegment6" resultType="Map">
+	  <![CDATA[
+	  select ffv.flex_value code, to_char(ffv.flex_value) || ' ' || ffvt.description description
+              from apps.fnd_flex_values     ffv,
+                   apps.fnd_flex_values_tl  ffvt,
+                   apps.fnd_flex_value_sets ffvs
+             where ffv.flex_value_id = ffvt.flex_value_id
+               and ffvt.language = 'ZHS'
+               and ffvs.flex_value_set_id = ffv.flex_value_set_id
+               and ffvs.flex_value_set_name like '%MC_COA_IC'
+             order by ffv.flex_value
+	  
+	 ]]>
+	</select>
+	<!-- 查询，resultType是结果类型，返回的list元素的转成该对象类型 -->
+	<select id="getSegment7" resultType="Map">
+	  <![CDATA[
+	  select ffv.flex_value code, to_char(ffv.flex_value) || ' ' || ffvt.description description
+              from apps.fnd_flex_values     ffv,
+                   apps.fnd_flex_values_tl  ffvt,
+                   apps.fnd_flex_value_sets ffvs
+             where ffv.flex_value_id = ffvt.flex_value_id
+               and ffvt.language = 'ZHS'
+               and ffvs.flex_value_set_id = ffv.flex_value_set_id
+               and ffvs.flex_value_set_name like '%MC_COA_SP'
+             order by ffv.flex_value
+	  
+	 ]]>
+	</select>
+	<!--{
+	  id:getCurrPeriod 
+	name:查询用户信息
+	desc:查询用户的详细信息
+	param:[
+	   {name:id,DataType:string,desc:用户标识，type:in},
+	   {name:id,DataType:string,desc:用户标识，type:in},
+	   {name:id,DataType:string,desc:用户标识，type:in},
+	   {name:id,DataType:string,desc:用户标识，type:in},
+	   {name:id,DataType:string,desc:用户标识，type:in},
+	   {name:id,DataType:string,desc:用户标识，type:out},
+	   {name:id,DataType:string,desc:用户标识，type:out},
+	   {name:id,DataType:string,desc:用户标识，type:out},
+	      ]
+	 }-->
+	<select id="getCurrPeriod" resultType="Map">
+	  <![CDATA[
+	  select ffv.flex_value code, to_char(ffv.flex_value) || ' ' || ffvt.description description
+              from apps.fnd_flex_values     ffv,
+                   apps.fnd_flex_values_tl  ffvt,
+                   apps.fnd_flex_value_sets ffvs
+             where ffv.flex_value_id = ffvt.flex_value_id
+               and ffvt.language = 'ZHS'
+               and ffvs.flex_value_set_id = ffv.flex_value_set_id
+               and ffvs.flex_value_set_name like '%MC_COA_SP'
+             order by ffv.flex_value
+	  
+	 ]]>
+	</select>
+
+    <select id="getAllocate" parameterType="Map" resultType="Map">
+      <![CDATA[
+      select ia4.period_name,
+		       ia4.segment1,
+		       ia4.segment3,
+		       ia4.NET_DR as period_net_cr,
+		       round((ia4.end_balance_dr - ia4.begin_balance_dr),2) as period_net_bal,
+		       ia4.Line_Num as line_num
+		  from iReport_allocate4 ia4
+		 where period_name = #{period_name}
+     ]]>
+    </select>
+
+</mapper>
